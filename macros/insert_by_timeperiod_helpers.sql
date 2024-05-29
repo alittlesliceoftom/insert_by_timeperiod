@@ -93,8 +93,8 @@
 
 {%- macro replace_placeholder_with_period_filter(core_sql, start_timestamp, stop_timestamp, offset, period) -%}
     -- Get filter values
-    {%- set period_filter_from = get_period_filter_from(period, offset,start_timestamp) -%}
-    {%- set period_filter_to = get_period_filter_to(period, offset,start_timestamp, stop_timestamp) -%}
+    {%- set period_filter_from = insert_by_timeperiod.get_period_filter_from(period, offset,start_timestamp) -%}
+    {%- set period_filter_to = insert_by_timeperiod.get_period_filter_to(period, offset,start_timestamp, stop_timestamp) -%}
     {# Below log lines left if needed for debug #}
     {# {{ dbt_utils.log_info("Period filter from: " ~ period_filter_from) }}
     {{ dbt_utils.log_info("Period filter to: " ~ period_filter_to) }} #}
