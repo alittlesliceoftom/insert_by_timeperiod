@@ -14,7 +14,7 @@ Note that the start and stop dates are found inisde the period_boundaries dict.
     -- Get period boundaries. This involves querying our source table, so we only do it inside the loop, not in the init statement
 
 
-    {% set period_boundaries = get_period_boundaries(target_schema, target_table, timestamp_field,
+    {% set period_boundaries = insert_by_timeperiod.get_period_boundaries(target_schema, target_table, timestamp_field,
                                                         start_stop_dates.start_date,
                                                         start_stop_dates.stop_date,
                                                         period,
@@ -35,7 +35,7 @@ Note that the start and stop dates are found inisde the period_boundaries dict.
         {%- set iteration_number = i %}
         {% set periods_to_offset = i - 1 %}
 
-        {%- set period_of_load = get_first_date_of_period_of_load(period, periods_to_offset, period_boundaries.start_timestamp) -%}
+        {%- set period_of_load = insert_by_timeperiod.get_first_date_of_period_of_load(period, periods_to_offset, period_boundaries.start_timestamp) -%}
 
         {{ dbt_utils.log_info("Running for {} {} of {} ({}) [{}]".format(period, iteration_number, period_boundaries.num_periods, period_of_load, model.unique_id)) }}
 
@@ -57,7 +57,7 @@ Note that the start and stop dates are found inisde the period_boundaries dict.
                                             type=tmp_relation_type) -%}
 
 
-        {% set tmp_table_sql = get_period_filter_sql(sql, period,
+        {% set tmp_table_sql = insert_by_timeperiod.get_period_filter_sql(sql, period,
                                                                 period_boundaries.start_timestamp,
                                                                 period_boundaries.stop_timestamp, periods_to_offset) %}
 
@@ -94,8 +94,8 @@ Note that the start and stop dates are found inisde the period_boundaries dict.
 
             DELETE FROM {{ target_relation }}
             WHERE -- avoid between for explicitness
-                {{ timestamp_field }} >= {{get_period_filter_from(period, offset = periods_to_offset ,start_timestamp=period_boundaries.start_timestamp)}} AND
-                {{ timestamp_field }} < {{get_period_filter_to(period, offset= periods_to_offset ,start_timestamp=period_boundaries.start_timestamp,stop_timestamp=period_boundaries.stop_timestamp)}}
+                {{ timestamp_field }} >= {{insert_by_timeperiod.get_period_filter_from(period, offset = periods_to_offset ,start_timestamp=period_boundaries.start_timestamp)}} AND
+                {{ timestamp_field }} < {{insert_by_timeperiod.get_period_filter_to(period, offset= periods_to_offset ,start_timestamp=period_boundaries.start_timestamp,stop_timestamp=period_boundaries.stop_timestamp)}}
             ;
             {%- elif unique_key is not none -%}
             DELETE
