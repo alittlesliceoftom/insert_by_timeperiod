@@ -1,4 +1,8 @@
 {% macro get_start_stop_dates(timestamp_field, date_source_models) %}
+    {{ return(adapter.dispatch('get_start_stop_dates', 'insert_by_timeperiod')(timestamp_field, date_source_models)) }}
+{% endmacro %}
+
+{% macro default__get_start_stop_dates(timestamp_field, date_source_models) %}
 
     {% if config.get('start_date', default=none) is not none %}
 
