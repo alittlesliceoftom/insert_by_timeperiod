@@ -159,7 +159,7 @@
 {%- macro get_period_filter_sql(base_sql, period, start_timestamp, stop_timestamp, offset) -%}
     {%- set filtered_sql = {'sql': base_sql} -%}
 
-    {%- do filtered_sql.update({'sql': replace_placeholder_with_period_filter(filtered_sql.sql,
+    {%- do filtered_sql.update({'sql': insert_by_timeperiod.replace_placeholder_with_period_filter(filtered_sql.sql,
                                                                                        start_timestamp,
                                                                                        stop_timestamp,
                                                                                        offset, period)}) -%}
