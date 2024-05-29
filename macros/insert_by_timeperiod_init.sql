@@ -30,7 +30,7 @@
             {% set build_sql = create_table_as(False, target_relation, sample_select_for_table_schema) %}
         {% else %}
 
-            {% set filtered_sql = replace_placeholder_with_period_filter(sql,
+            {% set filtered_sql = insert_by_timeperiod.replace_placeholder_with_period_filter(sql,
                                                                         start_stop_dates.start_date,
                                                                         start_stop_dates.stop_date,
                                                                         0, period) %}
