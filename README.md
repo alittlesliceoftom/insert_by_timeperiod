@@ -1,4 +1,4 @@
-# Custom insert by time period materialization (Synapse)
+# Custom insert by time period materialization (Currently Synapse only)
 
 **NOTE:  We have retained slightly different naming (IBTP vs IBP) and folder location from the `insert_by_period` materialisation. Switching from IBP to IBTP is a breaking change for models, IBTP only currently works on Microsoft Synapse and IBTP had a separate developement path from latest IBP materialisation.**
 
@@ -35,7 +35,7 @@ packages:
     revision: XXXX #optional but highly recommended. Provide a full git sha hash, e.g. 7180db61d26836b931aa6ef8ad9d70e7fb3a69fa. If not provided, uses the current HEAD.
 ```
 
-### Supported Versions: 
+### Supported Versions:
 
 As of 29/05/2024 - only tested on Azure Synapse.
 
@@ -100,15 +100,25 @@ Where possible use a medium or large RC to improve index quality.
 
 ### Commands
 
-#### Run model from last populated date to stop date.
+#### Normal Usage:
+
+Run model from last populated date to stop date.
 
 ```
 dbt run -s modelname
 ```
 
+#### Full Refresh:
+
+Run model from start date to stop date **deletes prior data at start of run** use with care.
+
+```
+dbt run -s modelname --full-refresh
+```
+
 #### Backfill For a Specific Date Range
 
-Backfill of date ranges can be done via CLI arguments. This is an advanced feature and should be used wiht care.
+Backfill of date ranges can be done via CLI arguments. This is an advanced feature and should be used with care.
 
 Example command that would backfill `base_ibp_model` + it's immediate downstream dependencies for given date range (right date excluded.)
 
@@ -124,9 +134,3 @@ The above command would:
 1. Backfill `base_ibp_model` for dates `2023-09-08` - `2023-09-10`
 2. Full Refresh `prep_incremental_model`
 3. Backfill `fact_ibp_model` for dates `2023-09-08` - `2023-09-10`
-
-#### Run model from start date to stop date **deletes prior data at start of run** use with care.
-
-```
-dbt run -s modelname --full-refresh
-```
