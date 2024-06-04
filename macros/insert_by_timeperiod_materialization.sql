@@ -48,7 +48,7 @@
         {{ dbt_utils.log_info("Using start and stop dates from CLI: " ~ start_date_cli ~ ' and ' ~ stop_date_cli) }}
         {%- set start_stop_dates = {'start_date': start_date_cli, 'stop_date': stop_date_cli} | as_native -%}
     {% else %}
-        {%- set start_stop_dates = get_start_stop_dates(timestamp_field, date_source_models) | as_native -%}
+        {%- set start_stop_dates = insert_by_timeperiod.get_start_stop_dates(timestamp_field, date_source_models) | as_native -%}
     {% endif %}
 
     {%- set period = config.get('period', default='day') -%}
@@ -59,7 +59,7 @@
 
 
 
-    {%- do check_period_filter_placeholders(sql) -%}
+    {%- do insert_by_timeperiod.check_period_filter_placeholders(sql) -%}
 
     -- `BEGIN` happens here:
     {{ run_hooks(pre_hooks, inside_transaction=False) }}
@@ -69,7 +69,7 @@
 
         {{ dbt_utils.log_info("About to initialise the table, this will include deleting the existing table" ~ this  ~ "If you don't want this, please exit now. Note this can happen when there is no existing table, in this case, existing relation = " ~ existing_relation ) }}
 
-        {{ insert_by_timeperiod_initialisation(target_relation, existing_relation, period, start_stop_dates, full_refresh_mode, sample_select_for_table_schema, tmp_relation) }}
+        {{ insert_by_timeperiod.insert_by_timeperiod_initialisation(target_relation, existing_relation, period, start_stop_dates, full_refresh_mode, sample_select_for_table_schema, tmp_relation) }}
         {% set on_schema_change = 'ignore' %}
     {% else %}
         {# We only want this to not be ignore if we didn't full refresh #}
@@ -77,7 +77,7 @@
     {% endif %}
     
     {# Loop - we always enter the loop#}
-    {{ run_insert_by_timeperiod_loop(target_schema, target_table, target_relation,unique_key, period, start_stop_dates, backfill, timestamp_field, on_schema_change) }}
+    {{ insert_by_timeperiod.run_insert_by_timeperiod_loop(target_schema, target_table, target_relation,unique_key, period, start_stop_dates, backfill, timestamp_field, on_schema_change) }}
 
     {{ run_hooks(post_hooks, inside_transaction=False) }}
 

@@ -1,8 +1,8 @@
 # Custom insert by time period materialization (Currently Synapse only)
 
-**NOTE:  We have retained slightly different naming (IBTP vs IBP) and folder location from the `insert_by_period` materialisation. Switching from IBP to IBTP is a breaking change for models, IBTP only currently works on Microsoft Synapse and IBTP had a separate developement path from latest IBP materialisation.**
+**NOTE:  Switching from `insert_by_period` to `insert_by_timeperiod` is a breaking change for models, IBTP is only known to work on Microsoft Synapse (other dbs to come, contributitions and tests welcome!) and IBTP had a separate developement path from latest IBP materialisation. Compared to "insert_by_period" accessible in [dbt-labs-experimental-features](https://github.com/dbt-labs/dbt-labs-experimental-features/tree/main) , we have retained slightly different naming to make this distinction clear.**
 
-`insert_by_timeperiod` (IBTP) allows dbt to insert records into a table one period (i.e. day, week) at a time.
+`insert_by_timeperiod` (IBTP) allows dbt to insert records into a table one period (i.e. day, week, month or year) at a time.
 
 This materialisation is supported only for synapse. For other adapters, utilise the `insert_by_period` macros.
 
@@ -22,7 +22,7 @@ The synapse `insert_by_timeperiod` materialisation includes a couple of differen
    - Backfill deletion is done by the timestamp_field
 2. Customisable FROM and TO dates inside the materialisation loop enable you to include WINDOW functions in your code.
 
-   - This requires sligthly more effort to use than the `insert_by_period` approach, but is more explicit and configurable, please see usage section below.
+   - This requires slightly more effort to use than the `insert_by_period` approach, but is more explicit and configurable, please see usage section below.
 
 ## Installation
 

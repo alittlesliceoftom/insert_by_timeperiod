@@ -1,4 +1,8 @@
 {% macro get_start_stop_dates(timestamp_field, date_source_models) %}
+    {{ return(adapter.dispatch('get_start_stop_dates', 'insert_by_timeperiod')(timestamp_field, date_source_models)) }}
+{% endmacro %}
+
+{% macro default__get_start_stop_dates(timestamp_field, date_source_models) %}
 
     {% if config.get('start_date', default=none) is not none %}
 
@@ -89,8 +93,8 @@
 
 {%- macro replace_placeholder_with_period_filter(core_sql, start_timestamp, stop_timestamp, offset, period) -%}
     -- Get filter values
-    {%- set period_filter_from = get_period_filter_from(period, offset,start_timestamp) -%}
-    {%- set period_filter_to = get_period_filter_to(period, offset,start_timestamp, stop_timestamp) -%}
+    {%- set period_filter_from = insert_by_timeperiod.get_period_filter_from(period, offset,start_timestamp) -%}
+    {%- set period_filter_to = insert_by_timeperiod.get_period_filter_to(period, offset,start_timestamp, stop_timestamp) -%}
     {# Below log lines left if needed for debug #}
     {# {{ dbt_utils.log_info("Period filter from: " ~ period_filter_from) }}
     {{ dbt_utils.log_info("Period filter to: " ~ period_filter_to) }} #}
@@ -155,7 +159,7 @@
 {%- macro get_period_filter_sql(base_sql, period, start_timestamp, stop_timestamp, offset) -%}
     {%- set filtered_sql = {'sql': base_sql} -%}
 
-    {%- do filtered_sql.update({'sql': replace_placeholder_with_period_filter(filtered_sql.sql,
+    {%- do filtered_sql.update({'sql': insert_by_timeperiod.replace_placeholder_with_period_filter(filtered_sql.sql,
                                                                                        start_timestamp,
                                                                                        stop_timestamp,
                                                                                        offset, period)}) -%}
