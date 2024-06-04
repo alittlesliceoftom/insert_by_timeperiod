@@ -22,7 +22,7 @@ The synapse `insert_by_timeperiod` materialisation includes a couple of differen
    - Backfill deletion is done by the timestamp_field
 2. Customisable FROM and TO dates inside the materialisation loop enable you to include WINDOW functions in your code.
 
-   - This requires sligthly more effort to use than the `insert_by_period` approach, but is more explicit and configurable, please see usage section below.
+   - This requires slightly more effort to use than the `insert_by_period` approach, but is more explicit and configurable, please see usage section below.
 
 ## Installation
 
