@@ -62,7 +62,7 @@
     {%- do insert_by_timeperiod.check_period_filter_placeholders(sql) -%}
 
     -- `BEGIN` happens here:
-    {{ run_hooks(pre_hooks, inside_transaction=False) }}
+    {{ run_hooks(pre_hooks) }}
 
     {# Run init if necessary: #}
     {% if full_refresh_mode or existing_relation.is_view or existing_relation is none %}
@@ -79,7 +79,7 @@
     {# Loop - we always enter the loop#}
     {{ insert_by_timeperiod.run_insert_by_timeperiod_loop(target_schema, target_table, target_relation,unique_key, period, start_stop_dates, backfill, timestamp_field, on_schema_change) }}
 
-    {{ run_hooks(post_hooks, inside_transaction=False) }}
+    {{ run_hooks(post_hooks) }}
 
     {{ return({'relations': [target_relation]}) }}
 
