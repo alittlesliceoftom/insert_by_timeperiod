@@ -31,7 +31,7 @@ This is not a package on the Package Hub. To install it via git, add this to `pa
 ```yaml
 packages:
   - git: https://github.com/alittlesliceoftom/insert_by_timeperiod
-    revision: 0.1.0  #optional but highly recommended. Provide a release version like 0.1.0 or a full git sha hash.  If not provided, uses the current HEAD.
+    revision: 0.1.1  #optional but highly recommended. Provide a release version like 0.1.1 or a full git sha hash.  If not provided, uses the current HEAD.
 ```
 
 ### Supported Versions:
