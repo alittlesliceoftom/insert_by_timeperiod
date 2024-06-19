@@ -86,7 +86,7 @@
 {%- macro get_period_filter_to(period, offset,start_timestamp, stop_timestamp)%}
 """ Generic macro to get the period filter to date. Note this provides text that can be used in a SQL statement, rather than a computed date."""
     {%- set period_filter_to -%}
-        LEAST({{dbt_utils.dateadd(period, offset + 1, start_timestamp) }}, '{{ stop_timestamp if stop_timestamp is not none else "9999-12-31" }}')
+        LEAST('{{dbt_utils.dateadd(period, offset + 1, start_timestamp) }}', '{{ stop_timestamp if stop_timestamp is not none else "9999-12-31" }}')
     {%- endset -%}
     {% do return(period_filter_to) %}
 {% endmacro %}
