@@ -1,5 +1,5 @@
 
-{% materialization insert_by_timeperiod, adapter = 'sqlserver' -%}
+{% materialization insert_by_timeperiod, adapter = 'default' -%}
     {# {{ dbt_utils.log_info("Insert by time period called:") }} -- uncomment for debugging  #}
 
     {%- set full_refresh_mode = flags.FULL_REFRESH -%}
