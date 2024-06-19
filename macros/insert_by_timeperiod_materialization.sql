@@ -3,7 +3,7 @@
     {# {{ dbt_utils.log_info("Insert by time period called:") }} -- uncomment for debugging  #}
 
     {%- set full_refresh_mode = flags.FULL_REFRESH -%}
-    {%- set backfill = var("backfill")|lower|trim == 'true' -%}
+    {%- set backfill = var("backfill", default = "false")|lower|trim == 'true' -%}
 
     {% if backfill %}
         {{ dbt_utils.log_info("WARNING: Backfill run detected, please note this run will overwrite data. If you're not familiar with this, please pause the run.") }}
