@@ -86,7 +86,7 @@
 {%- macro get_period_filter_to(period, offset,start_timestamp, stop_timestamp)%}
 """ Generic macro to get the period filter to date. Note this provides text that can be used in a SQL statement, rather than a computed date."""
     {%- set period_filter_to -%}
-        LEAST(DATEADD({{period}}, {{offset}} + 1, CAST('{{ start_timestamp }}' AS DATE)), '{{ stop_timestamp if stop_timestamp is not none else "9999-12-31" }}')
+        LEAST({{dbt_utils.dateadd(period, offset + 1, start_timestamp) }}, '{{ stop_timestamp if stop_timestamp is not none else "9999-12-31" }}')
     {%- endset -%}
     {% do return(period_filter_to) %}
 {% endmacro %}
@@ -116,7 +116,8 @@
                          CURRENT_TIMESTAMP ) as stop_timestamp
             {% else%}
                 GREATEST(
-                    DATEADD(day, 1, max({{ timestamp_field }})), -- we need to start with the day after the latest date so that we don't recreate the first day. 
+                    {{dbt_utils.dateadd(day,  1, 'MAX({{timestamp_field}})') }},
+                    {# DATEADD(day, 1, max({{ timestamp_field }})), -- we need to start with the day after the latest date so that we don't recreate the first day.  #}
                     '{{ start_date }}'
                     ) AS start_timestamp,
                 COALESCE({{ "nullif('" ~ stop_date | lower ~ "','none')" }},
@@ -146,7 +147,9 @@
 {%- macro get_first_date_of_period_of_load(period, offset, start_timestamp) -%}
 
     {% set period_of_load_sql -%}
-        SELECT DATEADD({{ period }}, {{ offset }}, CAST('{{start_timestamp}}' AS DATE)) AS period_of_load
+        SELECT 
+            {{dbt_utils.dateadd(period, offset, start_timestamp) }} AS period_of_load
+             {# DATEADD({{ period }}, {{ offset }}, CAST('{{start_timestamp}}' AS DATE)) AS period_of_load #}
     {%- endset %}
 
     {% set period_of_load_dict = dbt_utils.get_query_results_as_dict(period_of_load_sql) %}
