@@ -78,7 +78,7 @@
 
     """ Generic macro to get the period filter to date. Note this provides text that can be used in a SQL statement, rather than a computed date."""
     {%- set period_filter_from -%}
-        DATEADD({{period}}, {{offset}}, CAST('{{ start_timestamp }}' AS DATE))
+        CAST({{ dbt_utils.dateadd(period, offset, start_timestamp) }} AS DATE)
     {%- endset -%}
     {% do return(period_filter_from) %}
 {% endmacro %}
