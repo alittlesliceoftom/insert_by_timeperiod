@@ -1,6 +1,6 @@
 
 
-{% macro run_insert_by_timeperiod_loop(target_schema, target_table, target_relation,unique_key, period,start_stop_dates, backfill, timestamp_field,on_schema_change) %}
+{% macro run_insert_by_timeperiod_loop(target_schema, target_table, target_relation,unique_key, period,start_stop_dates, backfill, timestamp_field,on_schema_change,repeat_hooks_each_step) %}
 """
 This does the actual for loop between start and end dates.
 Following params can vary behaviour: 
@@ -29,6 +29,10 @@ Note that the start and stop dates are found inisde the period_boundaries dict.
     {{ dbt_utils.log_info("Entering by period loop. Periodic run details: {}".format(period_boundaries)) }}
 
     {% for i in range(1, period_boundaries.num_periods+1) -%}
+        {%- if repeat_hooks_each_step -%}
+            {{ run_hooks(pre_hooks) }}
+        {%- endif -%}
+
         {# The number of periods returned by func is 1 to high for daily model #}
         {# But it's too LOW for the monthly model....  #}
         {# {%- set iteration_number = i +1 %} #}

@@ -30,7 +30,9 @@
     {%- set date_source_models = config.get('date_source_models', default=none) -%}
     {%- set unique_key = config.get('unique_key', default=none) -%}
     {%- set sample_select_for_table_schema = config.get('sample_select_for_table_schema', default=none) -%}
-    
+
+    {%- set repeat_hooks_each_step =  config.get('repeat_hooks_each_step', default=none) %}
+
     {# We can take start and stop dates from 3 sources. Either config (default), another table (rarely used), or from a CLI argument. We want the CLI argument to over-ride the other options.  #}
     {%  set start_date_cli = var("start_date", default=none ) %}
     {%  set stop_date_cli = var("stop_date", default=none) %}
@@ -77,7 +79,7 @@
     {% endif %}
     
     {# Loop - we always enter the loop#}
-    {{ insert_by_timeperiod.run_insert_by_timeperiod_loop(target_schema, target_table, target_relation,unique_key, period, start_stop_dates, backfill, timestamp_field, on_schema_change) }}
+    {{ insert_by_timeperiod.run_insert_by_timeperiod_loop(target_schema, target_table, target_relation,unique_key, period, start_stop_dates, backfill, timestamp_field, on_schema_change, repeat_hooks_each_step) }}
 
     {{ run_hooks(post_hooks) }}
 
