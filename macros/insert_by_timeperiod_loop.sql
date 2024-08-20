@@ -1,6 +1,6 @@
 
 
-{% macro run_insert_by_timeperiod_loop(target_schema, target_table, target_relation,unique_key, period,start_stop_dates, backfill, timestamp_field,on_schema_change,repeat_hooks_each_step) %}
+{% macro run_insert_by_timeperiod_loop(target_schema, target_table, target_relation,unique_key, period,start_stop_dates, backfill, timestamp_field,on_schema_change,repeat_hooks_each_step,pre_hooks) %}
 """
 This does the actual for loop between start and end dates.
 Following params can vary behaviour: 
