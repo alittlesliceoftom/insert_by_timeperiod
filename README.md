@@ -26,7 +26,15 @@ The synapse `insert_by_timeperiod` materialisation includes a couple of differen
 
 ## Installation
 
-This is not a package on the Package Hub. To install it via git, add this to `packages.yml`:
+This is a package on the Package Hub. 
+
+```
+packages:
+	- package: alittlesliceoftom/insert_by_timeperiod 
+	  version: 0.1.3
+```
+
+Alternatively to install it via git, add this to `packages.yml`:
 
 ```yaml
 packages:
